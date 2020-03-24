@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, View, Text } from 'react-native'
+import { FlatList,ScrollView, View, Text } from 'react-native'
 import { ListItem, Card } from "react-native-elements"
 import { LEADERS } from "../shared/leaders"
 
@@ -29,7 +29,7 @@ const History = (props) => {
 
 export default AboutUs = (props) => {
     return (
-        <View>
+        <ScrollView>
             <History />
             <Card
                 title={"Corporate Leadership"}
@@ -40,6 +40,6 @@ export default AboutUs = (props) => {
                     keyExtractor={item => item.id.toString()}
                 />
             </Card>
-        </View>
+        </ScrollView>
     )
 }
