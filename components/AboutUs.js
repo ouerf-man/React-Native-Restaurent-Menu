@@ -1,13 +1,20 @@
 import React from 'react'
-import { FlatList,ScrollView, View, Text } from 'react-native'
+import { FlatList, ScrollView, View, Text } from 'react-native'
 import { ListItem, Card } from "react-native-elements"
-import { LEADERS } from "../shared/leaders"
+import { baseUrl } from "../shared/baseURL"
+import { connect, MapStateToProps } from "react-redux"
+import Loading from "./Loading"
+const mapStateToProps = state => {
+    return {
+        leaders: state.leaders
+    }
+}
 
 const renderReturnItem = ({ item, index }) => {
     return (
         <ListItem
             key={index}
-            leftAvatar={{ source: require("./images/alberto.png") }}
+            leftAvatar={{ source: { uri: baseUrl + item.image } }}
             title={item.name}
             subtitle={item.description}
         />
@@ -27,19 +34,44 @@ const History = (props) => {
     </Card>
 }
 
-export default AboutUs = (props) => {
-    return (
-        <ScrollView>
-            <History />
-            <Card
-                title={"Corporate Leadership"}
-            >
-                <FlatList
-                    data={LEADERS}
-                    renderItem={renderReturnItem}
-                    keyExtractor={item => item.id.toString()}
-                />
-            </Card>
-        </ScrollView>
-    )
+const AboutUs = (props) => {
+    if (props.leaders.isLoading) {
+        return (
+            <ScrollView>
+                <History />
+                <Card
+                    title='Corporate Leadership'>
+                    <Loading />
+                </Card>
+            </ScrollView>
+        );
+    }
+    else if (props.leaders.errMess) {
+        return (
+            <ScrollView>
+                <History />
+                <Card
+                    title='Corporate Leadership'>
+                    <Text>{props.leaders.errMess}</Text>
+                </Card>
+            </ScrollView>
+        );
+    }
+    else {
+        return (
+            <ScrollView>
+                <History />
+                <Card
+                    title='Corporate Leadership'>
+                    <FlatList
+                        data={props.leaders.leaders}
+                        renderItem={renderReturnItem}
+                        keyExtractor={item => item.id.toString()}
+                    />
+                </Card>
+            </ScrollView>
+        );
+    }
 }
+
+export default connect(mapStateToProps)(AboutUs);
